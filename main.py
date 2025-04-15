@@ -5,10 +5,10 @@ from instagrapi import Client
 from scheduler import Scheduler
 from instagram_manager import InstagramManager
 
-openai.api_key = "YOUR_OPENAI_API_KEY"  # استبدله بمفتاحك من OpenAI
+#openai.api_key = "YOUR_OPENAI_API_KEY"  # استبدله بمفتاحك من OpenAI
 
 # إعدادات البوت
-TOKEN = "YOUR_BOT_TOKEN"
+TOKEN = "8169323144:AAFxMI8RIateRHADPf-7akZXI9sSo8q6wiU"
 bot = telebot.TeleBot(TOKEN)
 
 user_states = {}
