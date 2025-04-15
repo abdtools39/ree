@@ -1,9 +1,12 @@
+import openai
 import json
 import threading
 import time
 import os
 from datetime import datetime
 from instagrapi.exceptions import LoginRequired
+
+openai.api_key = "YOUR_OPENAI_API_KEY"  # استبدله بمفتاحك من OpenAI
 
 class Scheduler:
     FILE = 'data/schedule.json'
@@ -29,6 +32,21 @@ class Scheduler:
     def add_post(cls, data):
         cls.scheduled_posts.append(data)
         cls.save()
+
+    @classmethod
+    def generate_caption(cls, media_type, description):
+        try:
+            prompt = f"Generate a catchy {media_type} caption for this: {description}"
+            response = openai.Completion.create(
+                engine="text-davinci-003",  # يمكنك استخدام أي موديل من OpenAI
+                prompt=prompt,
+                max_tokens=100
+            )
+            caption = response.choices[0].text.strip()
+            return caption
+        except Exception as e:
+            print(f"Error generating caption: {e}")
+            return "No caption generated."
 
     @classmethod
     def start(cls, instagrapi_loader):
