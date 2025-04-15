@@ -3,7 +3,7 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from instagram_manager import InstagramSessionManager
 
-API_TOKEN = 'YOUR_BOT_TOKEN_HERE'  # حط التوكن هنا
+API_TOKEN = '8169323144:AAFxMI8RIateRHADPf-7akZXI9sSo8q6wiU'  # حط التوكن هنا
 bot = telebot.TeleBot(API_TOKEN)
 
 user_states = {}
