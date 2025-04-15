@@ -1,36 +1,34 @@
-import os
 from instagrapi import Client
+import json
+import os
 
-SESSION_DIR = "sessions"
-os.makedirs(SESSION_DIR, exist_ok=True)
+class InstagramManager:
+    def __init__(self):
+        self.client = None
+        self.session_file = "insta_sessions.json"
 
-class InstagramSessionManager:
+    def login(self, username, password):
+        self.client = Client()
+        self.client.login(username, password)
+        self.save_session()
 
-    @staticmethod
-    def get_session_path(username):
-        return os.path.join(SESSION_DIR, f"{username}.session")
+    def save_session(self):
+        if self.client is None:
+            raise Exception("لا يمكن حفظ الجلسة لأنك لم تقم بتسجيل الدخول.")
+        session_data = self.client.get_settings()
+        with open(self.session_file, "w") as f:
+            json.dump(session_data, f)
 
-    @staticmethod
-    def login_and_store_session(username, password):
-        try:
-            cl = Client()
-            cl.login(username, password)
-            cl.dump_settings(InstagramSessionManager.get_session_path(username))
-            return True
-        except Exception as e:
-            print(f"[Login Error] {e}")
-            return False
+    def load_session(self):
+        if os.path.exists(self.session_file):
+            with open(self.session_file, "r") as f:
+                session_data = json.load(f)
+            self.client = Client()
+            self.client.load_settings(session_data)
+        else:
+            raise Exception("لم يتم العثور على ملف الجلسة.")
 
-    @staticmethod
-    def load_session(username):
-        cl = Client()
-        session_path = InstagramSessionManager.get_session_path(username)
-        if os.path.exists(session_path):
-            cl.load_settings(session_path)
-            cl.get_timeline_feed()  # Trigger session validation
-            return cl
-        return None
-
-    @staticmethod
-    def get_saved_accounts():
-        return [f.split(".")[0] for f in os.listdir(SESSION_DIR) if f.endswith(".session")]
+    def get_client(self):
+        if self.client is None:
+            raise Exception("لم يتم تسجيل الدخول بعد.")
+        return self.client
